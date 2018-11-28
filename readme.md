@@ -66,18 +66,35 @@
 * 법률 언어 : 거래과장에서의 문제를 법적으로 해소하고, 체결된 거래가 법적으로 용인시키기 위해 필요. 
 실제 법률계약서와 계약의 변수를 해싱하여 도출된 hash값.
 
->### Node(peer) 구성도
-
-![Minion](https://docs.corda.r3.com/_images/node-diagram.png)
 
 >### Codar Network 구조
 * Network
-	- doorman service로 node의 접근 허가(TLS certificate)를 제어한다. 
+	- doorman service를 제공하고 node의 접근 허가(TLS certificate)를 제어한다. 
+	- map service를 제공하고 network에 속한 node의 정보를 가지고 있다.
 	- 하나이상의 notary service(공증)를 수행하는 node가 존재한다.
 	- oracle service(거래서명)를 수행하는 node가 존재가 존재할 수 있다.
 * Node
 	- JVM run-time 환경에서 실행
 	- node간 communication은 AMSP/1.0(TSL) base로 broacdcast가 아니라 p2p로 수행된다
 * Notary 
- 	- 이중지불 방지
- 	- 선택적으로 거래 검증
+ 	- 이중지불을 방지한다.
+ 	- 선택적으로 거래 검증할 수 있다.
+ 	- node는 notary service를 제공할 수 있다.
+ 	- 합의 알고리즘은 선택 가능하다.(ex. RAFT, BFT)
+* Doorman
+	- node가 네트워크에 참여하려면 doorman 서버스에 요청한 정보를 제공해야하며, 
+accept되면 root_authority_sigend TLS 인증서를 받게된다. 이 인증서는 다른 node와의 통신에서 자신을 증명하는데 사용된다.
+* Map Service
+	- network map은 모든 node에 배포된다
+	- node는 network map service를 제공할 수 있다.
+
+>### Node
+>* DB는 default로 H2 사용. postgreSQL/SQLServer 사용 가능
+>* shell 제공. ssh로 접속 가능
+>* 구성
+
+![Minion](https://docs.corda.r3.com/_images/node-diagram.png)
+
+
+>### Contract
+>* 검증코드와 state object, commands로 구성
